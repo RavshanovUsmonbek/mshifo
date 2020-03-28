@@ -1,11 +1,19 @@
 from django.db import models
 
-# # Create your models here.
-# def upload_location(instance, filename):
-#     # ArbitraryModel = instance.__class__
-#     # new_id = Post.objects.order_by("id").last().id + 1
-#     return ('%s/%s') % (instance.id, filename)
+# Create your models here.
+def upload_location(instance, filename):
+    # ArbitraryModel = instance.__class__
+    # new_id = Post.objects.order_by("id").last().id + 1
+    return ('%s/%s/%s') % (instance.__class__,instance.id, filename)
 
+class Menu(models.Model):
+    length = 1
+    menu_types = [
+        ('F','footer'),
+        ('T','topper'),
+    ]
+    type_of_menu= models.CharField(max_length=length, choices=menu_types)
+    name = models.CharField(max_length=255)
 
 class Comment(models.Model):
     author_name = models.CharField(max_length=254)
@@ -23,20 +31,14 @@ class News(models.Model):
 
     class Meta:
         db_table = 'News'
+        verbose_name = 'News'
 
 class Service(models.Model):
     name = models.CharField(max_length=254)
-    description = models.TextField(blank=True, null=True)
-    is_top = models.BooleanField()
-    short_desc = models.TextField()
-
-    def __str__(self):
-        return self.name
-
-class ServicePicture(models.Model):
-    service = models.ForeignKey('Service', related_name='services', on_delete=models.CASCADE)
+    description = models.TextField()
+    picture = models.ImageField(upload_to=upload_location, height_field=None, width_field=None, max_length=None)
     image = models.ImageField(
-        upload_to='ServicePic/',
+        upload_to=upload_location,
         width_field= 'width_field',
         height_field = 'height_field',
         blank=True, null=True
@@ -44,13 +46,10 @@ class ServicePicture(models.Model):
     width_field = models.IntegerField(default = 0)
     height_field = models.IntegerField(default = 0)
 
-    def __str__(self):
-        return str(self.id)
-
 class Review(models.Model):
     user_name = models.CharField(max_length=254)
     image = models.ImageField(
-        upload_to='ReviewsPic/',
+        upload_to=upload_location,
         width_field= 'width_field',
         height_field = 'height_field',
         blank=True, null=True
@@ -65,25 +64,12 @@ class About(models.Model):
     address = models.CharField(max_length = 254)
     email = models.EmailField(max_length=254)
     estab_date = models.DateField(auto_now=False, auto_now_add=False)
-    long=models.TextField()
-    lat = models.TextField()
 
-
-class Message(models.Model):
-    name = models.CharField(max_length=255)
-    theme = models.CharField(max_length=255, blank=True, null=True)
-    email = models.EmailField(max_length=254)
-    content = models.TextField()
-
-
-class Doctor(models.Model):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    specialty = models.CharField(max_length=255)
-    experience = models.PositiveSmallIntegerField(blank=True, null=True)
-    bio = models.TextField()
+class Equipments(models.Model):
+    name = models.CharField(max_length=254)
+    description = models.TextField()
     image = models.ImageField(
-        upload_to='Doctors/',
+        upload_to=upload_location,
         width_field= 'width_field',
         height_field = 'height_field',
         blank=True, null=True
