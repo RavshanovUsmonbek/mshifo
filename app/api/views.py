@@ -4,7 +4,8 @@ from rest_framework.generics import (
     ListAPIView, 
     UpdateAPIView,
     RetrieveAPIView,
-    RetrieveUpdateAPIView
+    RetrieveUpdateAPIView,
+    ListCreateAPIView
     )
 
 from .serializers import(
@@ -54,7 +55,7 @@ class HospitalInfoListAPIView(ListAPIView):
     permission_classes = [AllowAny]
 
 
-class CommentListAPIView(ListAPIView):
+class CommentListAPIView(ListCreateAPIView):
     lookup_field = 'pk'
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
@@ -68,6 +69,12 @@ class NewsListAPIView(ListAPIView):
     permission_classes = [AllowAny]
 
 class MessageListAPIView(ListAPIView):
+    lookup_field = 'pk'
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = [AllowAny]
+
+class MessageCreateAPIView(CreateAPIView):
     lookup_field = 'pk'
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
@@ -111,6 +118,14 @@ class FollowerListAPIView(ListAPIView):
     queryset = Follower.objects.all()
     serializer_class = FollowerSerializer
     permission_classes = [AllowAny]
+
+
+class FollowerCreateAPIView(CreateAPIView):
+    lookup_field = 'pk'
+    queryset = Follower.objects.all()
+    serializer_class = FollowerSerializer
+    permission_classes = [AllowAny]
+
 
 class ReviewListAPIView(ListAPIView):
     lookup_field = 'pk'

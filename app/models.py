@@ -1,14 +1,17 @@
 from django.db import models
 from tinymce.models import HTMLField
-# # Create your models here.
-# def upload_location(instance, filename):
-#     # ArbitraryModel = instance.__class__
-#     # new_id = Post.objects.order_by("id").last().id + 1
-#     return ('%s/%s') % (instance.id, filename)
+from django.core.validators import ValidationError
+
+
+def validate_name(value):
+    if any(char.isdigit() for char in str(value)):
+        raise ValidationError(
+            'Name contains number, please avoid it'
+        )
 
 
 class Comment(models.Model):
-    author_name = models.CharField(max_length=254)
+    author_name = models.CharField(max_length=254, validators=[validate_name])
     email = models.EmailField(max_length=254)
     content = models.TextField()
     website = models.URLField(max_length=200)
@@ -23,7 +26,7 @@ class News(models.Model):
     posted_on = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     class Meta:
-        db_table = 'News'
+        verbose_name_plural = "News"
 
     def __str__(self):
         return f'{self.title}'
@@ -52,7 +55,7 @@ class ServicePicture(models.Model):
         return str(self.id)
 
 class Review(models.Model):
-    user_name = models.CharField(max_length=254)
+    author_name = models.CharField(max_length=254, validators=[validate_name])
     image = models.ImageField(
         upload_to='ReviewsPic/',
         width_field= 'width_field',
@@ -65,7 +68,7 @@ class Review(models.Model):
     date = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     def __str__(self):
-        return self.user_name
+        return self.author_name
 
 class HospitalInfo(models.Model):
     name = models.CharField(max_length=255)
@@ -74,6 +77,9 @@ class HospitalInfo(models.Model):
     num_staffs = models.PositiveSmallIntegerField(blank=True, null=True)
     num_awards = models.PositiveSmallIntegerField(blank=True, null=True)
     num_clients = models.PositiveSmallIntegerField(blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = "HospitalInfo"
     
     def __str__(self):
         return self.name
@@ -117,7 +123,7 @@ class OpeningHour(models.Model):
     
 
 class Message(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255,  validators=[validate_name])
     theme = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(max_length=254)
     content = models.TextField()
@@ -126,9 +132,9 @@ class Message(models.Model):
         return str(self.email)
 
 class Doctor(models.Model):
-    first_name = models.CharField(max_length=255)
-    middle_name = models.CharField(max_length=255, blank=True, null=True, default=None)
-    last_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255,  validators=[validate_name])
+    middle_name = models.CharField(max_length=255, blank=True, null=True, default=None,  validators=[validate_name])
+    last_name = models.CharField(max_length=255,  validators=[validate_name])
     specialty = models.CharField(max_length=255)
     bio = models.TextField()
     image = models.ImageField(
@@ -144,7 +150,7 @@ class Doctor(models.Model):
         return f'{self.first_name}-{self.last_name}'
 
 class Follower(models.Model):
-    emails = models.EmailField( max_length=254)
+    emails = models.EmailField(max_length=254, unique=True)
 
     def __str__(self):
         return str(self.emails)

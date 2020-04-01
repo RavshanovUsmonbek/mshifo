@@ -13,6 +13,8 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from rest_framework.documentation import include_docs_urls
+from rest_framework.permissions import AllowAny
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -20,5 +22,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('app.api.urls'))
+    path('api/', include('app.api.urls')),
+    path('docs/', include_docs_urls(
+         title='mshifo Backend Documentation auto generated',
+         permission_classes=[AllowAny, ],
+         authentication_classes=[])),
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

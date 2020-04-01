@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,8 +21,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '89p%=%1n1ghd-t0$mlperzw=3%d$^1)*2ga6**dz6uu*oes(#m'
-
+# SECRET_KEY = os.environ.get('SHIFO_KEY')
+SECRET_KEY ='89p%=%1n1ghd-t0$mlperzw=3%d$^1)*2ga6**dz6uu*oes(#m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -38,12 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # apps
+    'app',
+
     #third-party
     'tinymce',
     'rest_framework',
-
-    # apps
-    'app',
+    'django_cleanup',
     
 ]
 
@@ -92,6 +94,7 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = { 'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema' }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -137,3 +140,5 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static_cdn")
 MEDIA_ROOT =  os.path.join(BASE_DIR, "media_cdn")
+
+django_heroku.settings(locals())
