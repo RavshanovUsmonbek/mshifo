@@ -85,3 +85,11 @@ local_settings.py
 
 .env
 db.sqlite3
+staticfiles
+
+venv
+*.pyc
+staticfiles
+.env
+db.sqlite3
+mshifo/*

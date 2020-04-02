@@ -21,8 +21,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = os.environ.get('SHIFO_KEY')
-SECRET_KEY = '89p%=%1n1ghd-t0$mlperzw=3%d$^1)*2ga6**dz6uu*oes(#m'
+SECRET_KEY = os.environ.get('SHIFO_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'tinymce',
     'rest_framework',
     'django_cleanup',
-    
+
 ]
 
 MIDDLEWARE = [
@@ -135,11 +135,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static_cdn")
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 MEDIA_ROOT =  os.path.join(BASE_DIR, "media_cdn")
 
 django_heroku.settings(locals())
