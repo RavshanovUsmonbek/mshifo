@@ -5,6 +5,7 @@ from app import models
 class ServiceAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
 
+
 admin.site.register(models.HospitalInfo)
 admin.site.register(models.Comment)
 admin.site.register(models.ServicePicture)

@@ -54,6 +54,7 @@ class NewsSerializer(ModelSerializer):
         model = News
         fields = [
             'title',
+            'slug',
             'content',
             'comment_count',
             'posted_on',

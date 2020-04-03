@@ -72,6 +72,14 @@ class NewsListAPIView(ListAPIView):
     permission_classes = [AllowAny]
 
 
+class NewsDetailAPIView(RetrieveAPIView):
+    lookup_field = 'slug'
+    queryset = News.objects.all()
+    serializer_class = NewsSerializer
+    permission_classes = [AllowAny]
+
+
+
 class MessageCreateAPIView(CreateAPIView):
     lookup_field = 'pk'
     queryset = Message.objects.all()

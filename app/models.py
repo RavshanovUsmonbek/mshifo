@@ -1,6 +1,8 @@
 from django.db import models
 from tinymce.models import HTMLField
 from django.core.validators import ValidationError
+from django.db.models.signals import pre_save
+from django.utils.text import slugify
 
 
 def validate_name(value):
@@ -21,9 +23,11 @@ class Comment(models.Model):
         return f'{self.author_name}-{self.news_id}'
 
 
+
 class News(models.Model):
     title = models.CharField(max_length=254)
     content = HTMLField()
+    slug = models.SlugField(max_length=254, blank=True, unique=True)
     posted_on = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     class Meta:
@@ -31,6 +35,30 @@ class News(models.Model):
 
     def __str__(self):
         return f'{self.title}'
+
+
+
+def create_slug(instance,new_slug=None):
+    slug = slugify(instance.title)
+    ClassName = instance.__class__
+    if new_slug is not None:
+        slug = new_slug
+    qs = ClassName.objects.filter(slug=slug).order_by("-id")
+    exists = qs.exists()
+    if exists:
+        new_slug = "%s-%s" %(slug, qs.first().id)
+        return create_slug(instance, new_slug=new_slug)
+    return slug
+
+
+def pre_save_news_receiver(sender, instance, *args, **kwargs):
+    if not instance.slug:
+        instance.slug = create_slug(instance)
+
+
+pre_save.connect(pre_save_news_receiver, sender=News)
+
+
 
 
 class Service(models.Model):

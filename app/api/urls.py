@@ -14,6 +14,7 @@ urlpatterns = [
     path('message/create/',views.MessageCreateAPIView.as_view() ,name = 'message-create'),
 
     path('news/list/',views.NewsListAPIView.as_view() ,name = 'news-list'),
+    path('news/<str:slug>/',views.NewsDetailAPIView.as_view() ,name = 'news-detail'),
  
     path('service/list/',views.ServiceListAPIView.as_view() ,name = 'service-list'),
     path('service/<str:slug>/',views.ServiceDetailAPIView.as_view() ,name = 'service-detail'),
