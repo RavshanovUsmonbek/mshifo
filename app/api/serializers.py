@@ -22,10 +22,12 @@ from app.models import (
     ServiceCategory,
 )
 
+
+
 class ReviewSerializer(ModelSerializer):
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = ['author_name','image','content','date',]
 
 class FollowerSerializer(ModelSerializer):
     class Meta:
