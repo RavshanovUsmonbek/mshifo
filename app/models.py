@@ -88,7 +88,7 @@ class Review(models.Model):
         )
     width_field = models.IntegerField(default = 0)
     height_field = models.IntegerField(default = 0)
-    content = HTMLField()
+    content = models.TextField()
     date = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     def __str__(self):
