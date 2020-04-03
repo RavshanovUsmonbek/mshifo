@@ -1,9 +1,11 @@
 from rest_framework.serializers import (
     HyperlinkedIdentityField,
     ModelSerializer,
-    SerializerMethodField
+    SerializerMethodField,
+    StringRelatedField,
+    HyperlinkedRelatedField,
     )
-from app.models import Doctor, HospitalInfo
+
 from app.models import (
     Doctor, 
     HospitalInfo, 
@@ -17,14 +19,13 @@ from app.models import (
     OpeningHour,
     Follower,
     Review,
+    ServiceCategory,
 )
 
 class ReviewSerializer(ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'
-
-
 
 class FollowerSerializer(ModelSerializer):
     class Meta:
@@ -34,7 +35,15 @@ class FollowerSerializer(ModelSerializer):
 class DoctorSerializer(ModelSerializer):    
     class Meta:
         model = Doctor
-        fields = '__all__'
+        fields = [
+            'first_name',
+            'middle_name',
+            'last_name',
+            'specialty',
+            'bio',
+            'image',
+            ]
+
 
 class NewsSerializer(ModelSerializer):
     comments = SerializerMethodField()
@@ -62,32 +71,54 @@ class NewsSerializer(ModelSerializer):
 class CommentSerializer(ModelSerializer):
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ['author_name','email','content','website','news_id',]
+
 
 class ContactSerializer(ModelSerializer):
     class Meta:
         model = Contact
-        fields = '__all__'
+        fields = ['email','long', 'lat', 'address',]
 
 class PhoneSerializer(ModelSerializer):
     class Meta:
         model = Phone
-        fields = '__all__'
+        fields = ['phone',]
+
 
 class MessageSerializer(ModelSerializer):
     class Meta:
         model = Message
-        fields = '__all__'
+        fields = ['name','theme','email','phone','content',]
 
 
-class ServiceSerializer(ModelSerializer):
+class ServiceListSerializer(ModelSerializer):
+    category = StringRelatedField()
+    url = HyperlinkedIdentityField(
+        view_name='app-api:service-detail',
+        lookup_field='slug',
+    )
+    class Meta:
+        model = Service
+        fields = [
+            'url',
+            'name', 
+            'slug',
+            'category', 
+            'is_top', 
+            ]
+    
+
+class ServiceDetailSerializer(ModelSerializer):
     pictures = SerializerMethodField()
+    category = StringRelatedField()
     class Meta:
         model = Service
         fields = [
             'name', 
-            'short_description', 
+            'slug',
+            'category', 
             'is_top', 
+            'breif_description',
             'content',
             'pictures',
             ]
@@ -104,13 +135,25 @@ class ServiceSerializer(ModelSerializer):
 class ServicePictureSerializer(ModelSerializer):
     class Meta:
         model = ServicePicture
-        fields = '__all__'
+        fields = [
+            'service',
+            'image',
+        ]
 
+
+class ServiceCategorySerializer(ModelSerializer):
+    class Meta:
+        model=ServiceCategory
+        fields=['name','image',]
 
 class OpenningHoursSerializer(ModelSerializer):
     class Meta:
         model = OpeningHour
-        fields = '__all__'
+        fields = [
+            'weekday',
+            'from_hour', 
+            'to_hour',
+        ]
 
 
 class HospitalInfoSerializer(ModelSerializer):

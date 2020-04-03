@@ -20,6 +20,7 @@ class Comment(models.Model):
     def __str__(self):
         return f'{self.author_name}-{self.news_id}'
 
+
 class News(models.Model):
     title = models.CharField(max_length=254)
     content = HTMLField()
@@ -31,14 +32,36 @@ class News(models.Model):
     def __str__(self):
         return f'{self.title}'
 
+
 class Service(models.Model):
-    name = models.CharField(max_length=254)
-    short_description = HTMLField()
+    name = models.CharField(max_length=254, unique=True)
+    category = models.ForeignKey('ServiceCategory', related_name='services',
+                                 on_delete=models.SET_NULL, null=True)
     is_top = models.BooleanField()
+    breif_description = models.TextField(null=True, default=None, blank=True)
     content = HTMLField(blank=True, null=True)
+    slug = models.SlugField(max_length=254, unique=True)
+    def __str__(self):
+        return self.name
+
+
+class ServiceCategory(models.Model):
+    name = models.CharField(max_length=255,unique=True)
+    image = image = models.ImageField(
+        upload_to='ServiceCategory/',
+        width_field= 'width_field',
+        height_field = 'height_field',
+        blank=True, null=True
+        )
+    width_field = models.IntegerField(default = 0, blank=True)
+    height_field = models.IntegerField(default = 0, blank=True)
+
+    class Meta:
+        verbose_name_plural = "ServiceCategories"
 
     def __str__(self):
         return self.name
+
 
 class ServicePicture(models.Model):
     service = models.ForeignKey('Service', related_name='services', on_delete=models.CASCADE)
@@ -53,6 +76,7 @@ class ServicePicture(models.Model):
 
     def __str__(self):
         return str(self.id)
+
 
 class Review(models.Model):
     author_name = models.CharField(max_length=254, validators=[validate_name])
@@ -70,6 +94,7 @@ class Review(models.Model):
     def __str__(self):
         return self.author_name
 
+
 class HospitalInfo(models.Model):
     name = models.CharField(max_length=255)
     countent = HTMLField()
@@ -84,6 +109,7 @@ class HospitalInfo(models.Model):
     def __str__(self):
         return self.name
 
+
 class Contact(models.Model):
     email = models.EmailField(max_length=254)
     long=models.TextField()
@@ -95,7 +121,7 @@ class Contact(models.Model):
 
 
 class Phone(models.Model):
-    phone = models.CharField(max_length=255)
+    phone = models.CharField(max_length=255, unique = True)
 
     def __str__(self):
         return str(self.phone)
@@ -126,10 +152,12 @@ class Message(models.Model):
     name = models.CharField(max_length=255,  validators=[validate_name])
     theme = models.CharField(max_length=255, blank=True, null=True)
     email = models.EmailField(max_length=254)
+    phone = models.CharField(max_length=15, blank=True, null=True, default = None)
     content = models.TextField()
 
     def __str__(self):
         return str(self.email)
+
 
 class Doctor(models.Model):
     first_name = models.CharField(max_length=255,  validators=[validate_name])
@@ -148,6 +176,7 @@ class Doctor(models.Model):
     
     def __str__(self):
         return f'{self.first_name}-{self.last_name}'
+
 
 class Follower(models.Model):
     emails = models.EmailField(max_length=254, unique=True)

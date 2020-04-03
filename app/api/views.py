@@ -5,7 +5,7 @@ from rest_framework.generics import (
     UpdateAPIView,
     RetrieveAPIView,
     RetrieveUpdateAPIView,
-    ListCreateAPIView
+    ListCreateAPIView,
     )
 
 from .serializers import(
@@ -16,12 +16,14 @@ from .serializers import(
         ContactSerializer,
         PhoneSerializer,
         MessageSerializer,
-        ServiceSerializer,
+        ServiceListSerializer,
         ServicePictureSerializer,
         OpenningHoursSerializer,
         HospitalInfoSerializer,
         FollowerSerializer,
-        ReviewSerializer
+        ReviewSerializer,
+        ServiceDetailSerializer,
+        ServiceCategorySerializer,
      )
 
 from rest_framework.permissions import IsAdminUser, AllowAny
@@ -38,6 +40,7 @@ from app.models import (
     OpeningHour,
     Review,
     Follower,
+    ServiceCategory,
 )
 
 
@@ -68,11 +71,6 @@ class NewsListAPIView(ListAPIView):
     serializer_class = NewsSerializer
     permission_classes = [AllowAny]
 
-class MessageListAPIView(ListAPIView):
-    lookup_field = 'pk'
-    queryset = Message.objects.all()
-    serializer_class = MessageSerializer
-    permission_classes = [AllowAny]
 
 class MessageCreateAPIView(CreateAPIView):
     lookup_field = 'pk'
@@ -86,25 +84,26 @@ class ContactListAPIView(ListAPIView):
     serializer_class = ContactSerializer
     permission_classes = [AllowAny]
 
-class PhoneListAPIView(ListAPIView):
-    lookup_field = 'pk'
-    queryset = Phone.objects.all()
-    serializer_class = PhoneSerializer
-    permission_classes = [AllowAny]
-
 
 class ServiceListAPIView(ListAPIView):
-    lookup_field = 'pk'
     queryset = Service.objects.all()
-    serializer_class = ServiceSerializer
+    serializer_class = ServiceListSerializer
     permission_classes = [AllowAny]
 
 
-class ServicePicListAPIView(ListAPIView):
-    lookup_field = 'pk'
-    queryset = ServicePicture.objects.all()
-    serializer_class = ServicePictureSerializer
+class ServiceDetailAPIView(RetrieveAPIView):
+    lookup_field = 'slug'
+    queryset = Service.objects.all()
+    serializer_class = ServiceDetailSerializer
     permission_classes = [AllowAny]
+
+
+class ServiceCategoryListAPIView(ListAPIView):
+    queryset = ServiceCategory.objects.all()
+    serializer_class = ServiceCategorySerializer
+    permission_classes = [AllowAny]
+    
+
 
 class OpenningHoursListAPIView(ListAPIView):
     lookup_field = 'pk'
@@ -113,22 +112,15 @@ class OpenningHoursListAPIView(ListAPIView):
     permission_classes = [AllowAny]
 
 
-class FollowerListAPIView(ListAPIView):
-    lookup_field = 'pk'
-    queryset = Follower.objects.all()
-    serializer_class = FollowerSerializer
-    permission_classes = [AllowAny]
-
-
 class FollowerCreateAPIView(CreateAPIView):
     lookup_field = 'pk'
     queryset = Follower.objects.all()
     serializer_class = FollowerSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny,]
 
 
 class ReviewListAPIView(ListAPIView):
     lookup_field = 'pk'
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = [AllowAny]
+    permission_classes = [AllowAny,]

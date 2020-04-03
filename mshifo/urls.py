@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('app.api.urls')),
+    path('api/', include('app.api.urls', namespace='app-api')),
     path('docs/', include_docs_urls(
          title='mshifo Backend Documentation auto generated',
          permission_classes=[AllowAny, ],
