@@ -27,7 +27,7 @@ class Comment(models.Model):
 class News(models.Model):
     title = models.CharField(max_length=254)
     content = HTMLField()
-    slug = models.SlugField(max_length=254, blank=True, unique=True)
+    slug = models.SlugField(max_length=254, blank=True, unique=True, allow_unicode=True)
     posted_on = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     class Meta:
@@ -39,7 +39,7 @@ class News(models.Model):
 
 
 def create_slug(instance,new_slug=None):
-    slug = slugify(instance.title)
+    slug = slugify(instance.title,allow_unicode=True)
     ClassName = instance.__class__
     if new_slug is not None:
         slug = new_slug
@@ -68,7 +68,7 @@ class Service(models.Model):
     is_top = models.BooleanField()
     breif_description = models.TextField(null=True, default=None, blank=True)
     content = HTMLField(blank=True, null=True)
-    slug = models.SlugField(max_length=254, unique=True)
+    slug = models.SlugField(max_length=254, unique=True, allow_unicode=True)
     def __str__(self):
         return self.name
 
