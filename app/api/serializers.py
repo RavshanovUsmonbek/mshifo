@@ -77,15 +77,24 @@ class CommentSerializer(ModelSerializer):
         fields = ['author_name','email','content','website','news_id',]
 
 
-class ContactSerializer(ModelSerializer):
-    class Meta:
-        model = Contact
-        fields = ['email','long', 'lat', 'address',]
-
 class PhoneSerializer(ModelSerializer):
     class Meta:
         model = Phone
         fields = ['phone',]
+
+
+class ContactSerializer(ModelSerializer):
+    phones = SerializerMethodField()
+    class Meta:
+        model = Contact
+        fields = ['email','long', 'lat', 'address','phones']
+    
+    def get_phones(self, obj):
+        ph_qs = Phone.objects.all()
+        phones = PhoneSerializer(ph_qs, many=True).data
+        return phones or None
+
+
 
 
 class MessageSerializer(ModelSerializer):
