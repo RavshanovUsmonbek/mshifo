@@ -23,7 +23,7 @@ from .serializers import(
         FollowerSerializer,
         ReviewSerializer,
         ServiceDetailSerializer,
-        ServiceCategorySerializer,
+        CategorySerializer,
      )
 
 from rest_framework.permissions import IsAdminUser, AllowAny
@@ -106,11 +106,11 @@ class ServiceDetailAPIView(RetrieveAPIView):
     permission_classes = [AllowAny]
 
 
-class ServiceCategoryListAPIView(ListAPIView):
+class CategoryListAPIView(ListAPIView):
     queryset = ServiceCategory.objects.all()
-    serializer_class = ServiceCategorySerializer
+    serializer_class = CategorySerializer
     permission_classes = [AllowAny]
-    
+
 
 
 class OpenningHoursListAPIView(ListAPIView):

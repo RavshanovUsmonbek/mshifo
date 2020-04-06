@@ -104,7 +104,6 @@ class MessageSerializer(ModelSerializer):
 
 
 class ServiceListSerializer(ModelSerializer):
-    category = StringRelatedField()
     url = HyperlinkedIdentityField(
         view_name='app-api:service-detail',
         lookup_field='slug',
@@ -112,6 +111,7 @@ class ServiceListSerializer(ModelSerializer):
     class Meta:
         model = Service
         fields = [
+            'id',
             'url',
             'name', 
             'slug',
@@ -153,10 +153,12 @@ class ServicePictureSerializer(ModelSerializer):
         ]
 
 
-class ServiceCategorySerializer(ModelSerializer):
+class CategorySerializer(ModelSerializer):
+    services = ServiceListSerializer(many=True, read_only=True)
+    
     class Meta:
         model=ServiceCategory
-        fields=['name','image',]
+        fields=['id','name','image','services',]
 
 class OpenningHoursSerializer(ModelSerializer):
     class Meta:

@@ -21,10 +21,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SHIFO_KEY')
+# SECRET_KEY = os.environ.get('SHIFO_KEY')
 
+SECRET_KEY = '89p%=%1n1ghd-t0$mlperzw=3%d$^1)*2ga6**dz6uu*oes(#m'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['https://z3-mshifo-ssr.herokuapp.com/,']
 
@@ -100,8 +101,6 @@ DATABASES = {
 
 REST_FRAMEWORK = { 
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema', 
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
     }
 
 # Password validation
