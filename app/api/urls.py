@@ -19,7 +19,7 @@ urlpatterns = [
     path('service/list/',views.ServiceListAPIView.as_view() ,name = 'service-list'),
     path('service/<str:slug>/',views.ServiceDetailAPIView.as_view() ,name = 'service-detail'),
     
-    path('category/list/',views.CategoryListAPIView.as_view() ,name = 'category-list'),
+    path('service_category/list/',views.CategoryListAPIView.as_view() ,name = 'category-list'),
 
     path('follower/create/',views.FollowerCreateAPIView.as_view() ,name = 'follower-create'),
     
