@@ -1,7 +1,7 @@
 from django.db import models
 from tinymce.models import HTMLField
 from django.core.validators import ValidationError
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save, post_save
 from django.utils.text import slugify
 
 
@@ -59,7 +59,7 @@ def pre_save_news_receiver(sender, instance, *args, **kwargs):
         instance.slug = create_slug(instance)
 
 
-pre_save.connect(pre_save_news_receiver, sender=News)
+post_save.connect(pre_save_news_receiver, sender=News)
 
 
 class Service(models.Model):
@@ -73,7 +73,7 @@ class Service(models.Model):
     def __str__(self):
         return self.name
 
-pre_save.connect(pre_save_news_receiver, sender=Service)
+post_save.connect(pre_save_news_receiver, sender=Service)
 
 class ServiceCategory(models.Model):
     name = models.CharField(max_length=255,unique=True)
