@@ -23,21 +23,33 @@ from app.models import (
 )
 
 
-
 class ReviewSerializer(ModelSerializer):
     class Meta:
         model = Review
-        fields = ['author_name','image','content','date',]
+        fields = ['id','author_name','image','content','date',]
+
+class ReviewCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+
+
+class FollowerCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Follower
+        fields = '__all__'
 
 class FollowerSerializer(ModelSerializer):
     class Meta:
         model = Follower
-        fields = '__all__'
+        fields = ['id','email',]
+
 
 class DoctorSerializer(ModelSerializer):    
     class Meta:
         model = Doctor
         fields = [
+            'id',
             'first_name',
             'middle_name',
             'last_name',
@@ -53,6 +65,7 @@ class NewsSerializer(ModelSerializer):
     class Meta:
         model = News
         fields = [
+            'id',
             'title',
             'slug',
             'content',
@@ -71,10 +84,23 @@ class NewsSerializer(ModelSerializer):
         return c_qs
 
 
+class NewsCreateSerializer(ModelSerializer):
+    class Meta:
+        model = News
+        exclude = ['slug',]
+
+
 class CommentSerializer(ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['author_name','email','content','website','news_id',]
+        fields = ['id','author_name','email','content','website','news_id',]
+
+
+class CommentCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
 
 
 class PhoneSerializer(ModelSerializer):
@@ -87,12 +113,18 @@ class ContactSerializer(ModelSerializer):
     phones = SerializerMethodField()
     class Meta:
         model = Contact
-        fields = ['email','long', 'lat', 'address','phones']
-    
+        fields = ['id', 'email','long', 'lat', 'address','phones']
+
     def get_phones(self, obj):
         ph_qs = Phone.objects.all()
         phones = PhoneSerializer(ph_qs, many=True).data
         return phones or None
+
+
+class ContactCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = '__all__'
 
 
 
@@ -100,7 +132,14 @@ class ContactSerializer(ModelSerializer):
 class MessageSerializer(ModelSerializer):
     class Meta:
         model = Message
-        fields = ['name','theme','email','phone','content',]
+        fields = ['id','name','theme','email','phone','content',]
+
+
+class MessageCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Message
+        fields = '__all__'
+
 
 
 class ServiceListSerializer(ModelSerializer):
@@ -118,6 +157,12 @@ class ServiceListSerializer(ModelSerializer):
             'category', 
             'is_top', 
             ]
+
+
+class ServiceCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Service
+        exclude = ['slug',]
     
 
 class ServiceDetailSerializer(ModelSerializer):
@@ -155,11 +200,18 @@ class ServicePictureSerializer(ModelSerializer):
 
 class CategorySerializer(ModelSerializer):
     services = ServiceListSerializer(many=True, read_only=True)
-    
+
     class Meta:
         model=ServiceCategory
         fields=['id','name','image','services',]
 
+
+class CategoryCreateSerializer(ModelSerializer):
+    class Meta:
+        model=ServiceCategory
+        fields='__all__'
+
+        
 class OpenningHoursSerializer(ModelSerializer):
     class Meta:
         model = OpeningHour
@@ -176,6 +228,7 @@ class HospitalInfoSerializer(ModelSerializer):
     class Meta:
         model = HospitalInfo
         fields = [
+            'id',
             'name',
             'countent',
             'year',
@@ -195,3 +248,33 @@ class HospitalInfoSerializer(ModelSerializer):
         c_qs = Contact.objects.all()
         contacts = ContactSerializer(c_qs, many=True).data
         return contacts or None
+
+
+class HospitalInfoCreateSerializer(ModelSerializer):
+    class Meta:
+        model = HospitalInfo
+        fields = '__all__'
+
+
+class PhoneSerializer(ModelSerializer):
+    class Meta:
+        model = Phone
+        fields = ['id', 'phone']
+
+
+class PhoneCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Phone
+        fields = '__all__'
+
+
+class ServicePicCreateSerializer(ModelSerializer):
+    class Meta:
+        model = ServicePicture
+        fields = '__all__'
+
+
+class ServicePicSerializer(ModelSerializer):
+    class Meta:
+        model = ServicePicture
+        fields = ['id','service', 'image']

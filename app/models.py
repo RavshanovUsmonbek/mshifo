@@ -39,8 +39,11 @@ class News(models.Model):
 
 
 def create_slug(instance,new_slug=None):
-    slug = slugify(instance.title,allow_unicode=True)
     ClassName = instance.__class__
+    if ClassName.__name__ == 'News':
+        slug = slugify(instance.title,allow_unicode=True)
+    else:
+        slug = slugify(instance.name,allow_unicode=True)
     if new_slug is not None:
         slug = new_slug
     qs = ClassName.objects.filter(slug=slug).order_by("-id")
@@ -59,8 +62,6 @@ def pre_save_news_receiver(sender, instance, *args, **kwargs):
 pre_save.connect(pre_save_news_receiver, sender=News)
 
 
-
-
 class Service(models.Model):
     name = models.CharField(max_length=254, unique=True)
     category = models.ForeignKey('ServiceCategory', related_name='services',
@@ -68,21 +69,18 @@ class Service(models.Model):
     is_top = models.BooleanField()
     breif_description = models.TextField(null=True, default=None, blank=True)
     content = HTMLField(blank=True, null=True)
-    slug = models.SlugField(max_length=254, unique=True, allow_unicode=True)
+    slug = models.SlugField(max_length=254, blank=True, unique=True, allow_unicode=True)
     def __str__(self):
         return self.name
 
+pre_save.connect(pre_save_news_receiver, sender=Service)
 
 class ServiceCategory(models.Model):
     name = models.CharField(max_length=255,unique=True)
     image = image = models.ImageField(
         upload_to='ServiceCategory/',
-        width_field= 'width_field',
-        height_field = 'height_field',
         blank=True, null=True
         )
-    width_field = models.IntegerField(default = 0, blank=True)
-    height_field = models.IntegerField(default = 0, blank=True)
 
     class Meta:
         verbose_name_plural = "ServiceCategories"
@@ -95,12 +93,8 @@ class ServicePicture(models.Model):
     service = models.ForeignKey('Service', related_name='services', on_delete=models.CASCADE)
     image = models.ImageField(
         upload_to='ServicePic/',
-        width_field= 'width_field',
-        height_field = 'height_field',
         blank=True, null=True
         )
-    width_field = models.IntegerField(default = 0)
-    height_field = models.IntegerField(default = 0)
 
     def __str__(self):
         return str(self.id)
@@ -110,12 +104,8 @@ class Review(models.Model):
     author_name = models.CharField(max_length=254, validators=[validate_name])
     image = models.ImageField(
         upload_to='ReviewsPic/',
-        width_field= 'width_field',
-        height_field = 'height_field',
         blank=True, null=True
         )
-    width_field = models.IntegerField(default = 0)
-    height_field = models.IntegerField(default = 0)
     content = models.TextField()
     date = models.DateTimeField(auto_now=False, auto_now_add=True)
 
@@ -195,19 +185,14 @@ class Doctor(models.Model):
     bio = models.TextField()
     image = models.ImageField(
         upload_to='Doctors/',
-        width_field= 'width_field',
-        height_field = 'height_field',
         blank=True, null=True
         )
-    width_field = models.IntegerField(default = 0)
-    height_field = models.IntegerField(default = 0)
-    
     def __str__(self):
         return f'{self.first_name}-{self.last_name}'
 
 
 class Follower(models.Model):
-    emails = models.EmailField(max_length=254, unique=True)
+    email = models.EmailField(max_length=254, unique=True)
 
     def __str__(self):
-        return str(self.emails)
+        return str(self.email)
